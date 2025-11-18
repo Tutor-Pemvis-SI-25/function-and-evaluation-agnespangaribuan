@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="4.2">
+    <attributes>
+        <attribute name="name" value="Sistem Manajemen Tugas Ucok"/>
+        <attribute name="authors" value="Gemini AI"/>
+        <attribute name="about" value="Solusi Tugas Ucok &amp; Butet"/>
+        <attribute name="saved" value="2025-11-18 09:19:45 PM"/>
+        <attribute name="created" value="QVNVUztMQVBUT1AtVUhTREc2TFU7MjAyNS0xMS0xODswOTowNzowNiBQTTsyNzA1"/>
+        <attribute name="edited" value="QVNVUztMQVBUT1AtVUhTREc2TFU7MjAyNS0xMS0xODswOToxOTo0NSBQTTsxOzI4MTk="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="KodeMatkul" type="String" array="True" size="10"/>
+            <declare name="NamaTugas" type="String" array="True" size="10"/>
+            <declare name="Status" type="String" array="True" size="10"/>
+            <declare name="Deadline" type="Integer" array="True" size="10"/>
+            <declare name="Kesulitan" type="Integer" array="True" size="10"/>
+            <declare name="Prioritas" type="Real" array="True" size="10"/>
+            <declare name="JumlahData" type="Integer" array="False" size=""/>
+            <assign variable="JumlahData" expression="0"/>
+            <declare name="Running" type="Boolean" array="False" size=""/>
+            <assign variable="Running" expression="True"/>
+            <declare name="Perintah" type="String" array="False" size=""/>
+            <while expression="Running">
+                <input variable="Perintah"/>
+                <if expression="Perintah == &quot;(Add task)&quot;">
+                    <then>
+                        <call expression="TambahTugas(JumlahData, KodeMatkul, NamaTugas, Deadline, Kesulitan, Status, Prioritas, Running)"/>
+                    </then>
+                    <else>
+                        <if expression="Perintah == &quot;(Update task status)&quot;">
+                            <then>
+                                <call expression="UpdateStatus(JumlahData, KodeMatkul, Status)"/>
+                            </then>
+                            <else>
+                                <if expression="Perintah == &quot;(Show assignment)&quot;">
+                                    <then>
+                                        <call expression="TampilkanTugas(JumlahData, KodeMatkul, NamaTugas, Deadline, Kesulitan, Status, Prioritas)"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </while>
+        </body>
+    </function>
+    <function name="TambahTugas" type="None" variable="">
+        <parameters>
+            <parameter name="N" type="Integer" array="False"/>
+            <parameter name="Kode" type="String" array="True"/>
+            <parameter name="Nama" type="String" array="True"/>
+            <parameter name="Dead" type="Integer" array="True"/>
+            <parameter name="Sulit" type="Integer" array="True"/>
+            <parameter name="Stat" type="String" array="True"/>
+            <parameter name="Prio" type="Real" array="True"/>
+            <parameter name="Run" type="Boolean" array="False"/>
+        </parameters>
+        <body>
+            <if expression="N &gt;= 10">
+                <then>
+                    <output expression="&quot;Memori Penuh&quot;" newline="True"/>
+                </then>
+                <else>
+                    <declare name="tempNama" type="String" array="False" size=""/>
+                    <input variable="Kode[N]"/>
+                    <input variable="tempNama"/>
+                    <if expression="tempNama == &quot;---&quot;">
+                        <then>
+                            <assign variable="Run" expression="False"/>
+                        </then>
+                        <else>
+                            <assign variable="Nama[N]" expression="tempNama"/>
+                            <input variable="Dead[N]"/>
+                            <input variable="Sulit[N]"/>
+                            <input variable="Stat[N]"/>
+                            <assign variable="Prio[N]" expression="Sulit[N] * (1.0 / Dead[N])"/>
+                            <assign variable="N" expression="N + 1"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="TampilkanTugas" type="None" variable="">
+        <parameters>
+            <parameter name="N" type="Integer" array="False"/>
+            <parameter name="Kode" type="String" array="True"/>
+            <parameter name="Nama" type="String" array="True"/>
+            <parameter name="Dead" type="Integer" array="True"/>
+            <parameter name="Sulit" type="Integer" array="True"/>
+            <parameter name="Stat" type="String" array="True"/>
+            <parameter name="Prio" type="Real" array="True"/>
+        </parameters>
+        <body>
+            <call expression="Urutkan(N, Kode, Nama, Dead, Sulit, Stat, Prio)"/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <for variable="i" start="0" end="N - 1" direction="inc" step="1">
+                <output expression="&quot;Kode: &quot; &amp; Kode[i]" newline="True"/>
+                <if expression="Stat[i] != &quot;Selesai&quot;">
+                    <then>
+                        <output expression="&quot;Tugas: &quot; &amp; Nama[i]" newline="True"/>
+                        <output expression="&quot;Deadline: &quot; &amp; Dead[i]" newline="True"/>
+                    </then>
+                    <else/>
+                </if>
+                <output expression="&quot;Status: &quot; &amp; Stat[i]" newline="True"/>
+                <output expression="&quot;Prioritas: &quot; &amp; Prio[i]" newline="True"/>
+                <if expression="Prio[i] &gt; 3">
+                    <then>
+                        <output expression="&quot;Penting! Anda harus mengerjakan tugas ini segera&quot;" newline="True"/>
+                    </then>
+                    <else>
+                        <if expression="Prio[i] &gt;= 1.5">
+                            <then>
+                                <output expression="&quot;Tugas ini memiliki prioritas menengah&quot;" newline="True"/>
+                            </then>
+                            <else>
+                                <output expression="&quot;Tugas ini relatif ringan, namun jangan tunda terlalu lama&quot;" newline="True"/>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+                <output expression="&quot;------------------------------&quot;" newline="True"/>
+            </for>
+        </body>
+    </function>
+    <function name="UpdateStatus" type="None" variable="">
+        <parameters>
+            <parameter name="N" type="Integer" array="False"/>
+            <parameter name="Kode" type="String" array="True"/>
+            <parameter name="Stat" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="target" type="String" array="False" size=""/>
+            <declare name="baru" type="String" array="False" size=""/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <input variable="target"/>
+            <input variable="baru"/>
+            <for variable="i" start="0" end="N-1" direction="inc" step="1">
+                <if expression="Kode[i] == target">
+                    <then>
+                        <assign variable="Stat[i]" expression="baru"/>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+        </body>
+    </function>
+    <function name="Urutkan" type="None" variable="">
+        <parameters>
+            <parameter name="N" type="Integer" array="False"/>
+            <parameter name="Kode" type="String" array="True"/>
+            <parameter name="Nama" type="String" array="True"/>
+            <parameter name="Dead" type="Integer" array="True"/>
+            <parameter name="Sulit" type="Integer" array="True"/>
+            <parameter name="Stat" type="String" array="True"/>
+            <parameter name="Prio" type="Real" array="True"/>
+        </parameters>
+        <body>
+            <declare name="i, j" type="Integer" array="False" size=""/>
+            <declare name="tempS" type="String" array="False" size=""/>
+            <declare name="tempI" type="Integer" array="False" size=""/>
+            <declare name="tempR" type="Real" array="False" size=""/>
+            <for variable="i" start="0" end="N - 1" direction="inc" step="1">
+                <for variable="j" start="0" end="N - 2 - i" direction="inc" step="1">
+                    <if expression="Prio[j] &lt; Prio[j+1]">
+                        <then>
+                            <assign variable="tempR" expression="Prio[j]"/>
+                            <assign variable="Prio[j]" expression="Prio[j+1]"/>
+                            <assign variable="Prio[j+1]" expression="tempR"/>
+                            <assign variable="tempS" expression="Kode[j]"/>
+                            <assign variable="Kode[j]" expression="Kode[j+1]"/>
+                            <assign variable="Kode[j+1]" expression="tempS"/>
+                            <assign variable="tempS" expression="Nama[j]"/>
+                            <assign variable="Nama[j]" expression="Nama[j+1]"/>
+                            <assign variable="Nama[j+1]" expression="tempS"/>
+                            <assign variable="tempS" expression="Stat[j]"/>
+                            <assign variable="Stat[j]" expression="Stat[j+1]"/>
+                            <assign variable="Stat[j+1]" expression="tempS"/>
+                            <assign variable="tempI" expression="Dead[j]"/>
+                            <assign variable="Dead[j]" expression="Dead[j+1]"/>
+                            <assign variable="Dead[j+1]" expression="tempI"/>
+                            <assign variable="tempI" expression="Sulit[j]"/>
+                            <assign variable="Sulit[j]" expression="Sulit[j+1]"/>
+                            <assign variable="Sulit[j+1]" expression="tempI"/>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+            </for>
+        </body>
+    </function>
+</flowgorithm>
